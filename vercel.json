@@ -4,10 +4,15 @@
   "framework": "vite",
   "functions": {
     "api/[...path].ts": {
-      "maxDuration": 60
+      "maxDuration": 60,
+      "includeFiles": "{server,src,data,public}/**"
     }
   },
   "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "/api/[...path]"
+    },
     {
       "source": "/((?!api/.*).*)",
       "destination": "/index.html"
