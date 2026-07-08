@@ -589,7 +589,7 @@ app.get('/api/cron/data-refresh', requireCronRequest, handleCronDataRefreshRoute
 app.get('/api/data/refresh/status', handleDataRefreshStatusRoute)
 app.post('/api/imports/preview', requireAdminRequest, handleImportPreviewRoute)
 app.post('/api/imports/commit', requireAdminRequest, handleImportCommitRoute)
-app.get('/api/gallery/status', requireAdminRequest, handleGalleryStatusRoute)
+app.get('/api/gallery/status', handleGalleryStatusRoute)
 app.post('/api/gallery/discover', requireAdminRequest, handleGalleryDiscoverRoute)
 app.get('/api/gallery/candidates/:id/preview', handleGalleryCandidatePreviewRoute)
 app.post('/api/gallery/candidates/:id/approve', requireAdminRequest, handleGalleryCandidateApproveRoute)
