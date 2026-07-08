@@ -1,0 +1,67 @@
+:root {
+  --bg: #f7f9fb;
+  --surface: #ffffff;
+  --surface-soft: #f2f6f7;
+  --surface-strong: #e9f2f1;
+  --text: #122023;
+  --muted: #405158;
+  --faint: #8fa0a7;
+  --border: #dbe4e8;
+  --border-strong: #b9c8cc;
+  --accent: #0f766e;
+  --accent-dark: #075e59;
+  --accent-soft: #e0f2f1;
+  --amber: #f59e0b;
+  --danger: #dc2626;
+  --blue-ink: #102a43;
+  --shadow: 0 10px 24px rgba(15, 35, 45, 0.06);
+  --radius: 6px;
+  --font-sans: Inter, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+
+  font-family: var(--font-sans);
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--bg);
+}
+
+button,
+select,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid #f59e0b;
+  outline-offset: 3px;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+#root {
+  min-height: 100vh;
+}

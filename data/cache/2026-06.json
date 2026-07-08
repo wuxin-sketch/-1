@@ -1,0 +1,573 @@
+{
+  "month": "2026-06",
+  "dataMode": "live",
+  "items": [
+    {
+      "id": "honda-crv",
+      "brand": "本田",
+      "model": "CR-V",
+      "segment": "紧凑型 SUV / 合资",
+      "modelYears": "2021-2023",
+      "priceMin": 119000,
+      "priceMax": 168000,
+      "heatIndex": 96,
+      "retentionRate": 78,
+      "ageYears": 2.8,
+      "mileageWanKm": 4.1,
+      "sourceConfidence": 96,
+      "sampleSize": 185,
+      "sources": [
+        "汽车之家",
+        "懂车帝",
+        "瓜子",
+        "车300",
+        "公开自动抓取"
+      ],
+      "updatedAt": "2026-07-07T11:34:27.314Z",
+      "riskLevel": "中",
+      "riskNotes": [
+        "部分车源存在定速巡航线路投诉",
+        "重点检查发动机机脚与底盘胶套",
+        "建议选择个人一手车源"
+      ],
+      "advice": "价格稳定、保值率高，适合作为优先试驾对象。",
+      "heatBreakdown": {
+        "search": 28,
+        "view": 31,
+        "inquiry": 22,
+        "sold": 19
+      },
+      "priceDistribution": [
+        {
+          "label": "10-12",
+          "share": 11
+        },
+        {
+          "label": "12-14",
+          "share": 22
+        },
+        {
+          "label": "14-16",
+          "share": 45
+        },
+        {
+          "label": "16-18",
+          "share": 17
+        },
+        {
+          "label": "18-20",
+          "share": 5
+        }
+      ]
+    },
+    {
+      "id": "toyota-rav4",
+      "brand": "丰田",
+      "model": "RAV4荣放",
+      "segment": "紧凑型 SUV / 合资",
+      "modelYears": "2021-2023",
+      "priceMin": 130000,
+      "priceMax": 178000,
+      "heatIndex": 93,
+      "retentionRate": 77,
+      "ageYears": 2.9,
+      "mileageWanKm": 4.3,
+      "sourceConfidence": 94,
+      "sampleSize": 173,
+      "sources": [
+        "汽车之家",
+        "懂车帝",
+        "瓜子",
+        "车300",
+        "公开自动抓取"
+      ],
+      "updatedAt": "2026-07-07T11:34:27.314Z",
+      "riskLevel": "低",
+      "riskNotes": [
+        "注意混动电池检测报告",
+        "检查召回与保养记录是否完整"
+      ],
+      "advice": "保值率强，价格偏高，适合追求稳定残值的买家。",
+      "heatBreakdown": {
+        "search": 26,
+        "view": 29,
+        "inquiry": 21,
+        "sold": 17
+      },
+      "priceDistribution": [
+        {
+          "label": "10-12",
+          "share": 4
+        },
+        {
+          "label": "12-14",
+          "share": 16
+        },
+        {
+          "label": "14-16",
+          "share": 35
+        },
+        {
+          "label": "16-18",
+          "share": 31
+        },
+        {
+          "label": "18-20",
+          "share": 14
+        }
+      ]
+    },
+    {
+      "id": "nissan-xtrail",
+      "brand": "日产",
+      "model": "奇骏",
+      "segment": "紧凑型 SUV / 合资",
+      "modelYears": "2020-2022",
+      "priceMin": 106000,
+      "priceMax": 151000,
+      "heatIndex": 80,
+      "retentionRate": 63,
+      "ageYears": 4,
+      "mileageWanKm": 5.9,
+      "sourceConfidence": 75,
+      "sampleSize": 148,
+      "sources": [
+        "汽车之家",
+        "懂车帝",
+        "瓜子"
+      ],
+      "updatedAt": "2026-06-29 16:48",
+      "riskLevel": "中",
+      "riskNotes": [
+        "CVT 变速箱需要重点试驾",
+        "关注三缸版本市场接受度"
+      ],
+      "advice": "成交价有吸引力，但必须把车况检测放在前面。",
+      "heatBreakdown": {
+        "search": 23,
+        "view": 27,
+        "inquiry": 18,
+        "sold": 15
+      },
+      "priceDistribution": [
+        {
+          "label": "10-12",
+          "share": 29
+        },
+        {
+          "label": "12-14",
+          "share": 34
+        },
+        {
+          "label": "14-16",
+          "share": 25
+        },
+        {
+          "label": "16-18",
+          "share": 9
+        },
+        {
+          "label": "18-20",
+          "share": 3
+        }
+      ]
+    },
+    {
+      "id": "vw-tiguan-l",
+      "brand": "大众",
+      "model": "途观L",
+      "segment": "中型 SUV / 合资",
+      "modelYears": "2021-2023",
+      "priceMin": 145000,
+      "priceMax": 196000,
+      "heatIndex": 81,
+      "retentionRate": 68,
+      "ageYears": 3.2,
+      "mileageWanKm": 5.2,
+      "sourceConfidence": 86,
+      "sampleSize": 143,
+      "sources": [
+        "汽车之家",
+        "懂车帝",
+        "车300",
+        "公开自动抓取"
+      ],
+      "updatedAt": "2026-07-07T11:34:27.314Z",
+      "riskLevel": "中",
+      "riskNotes": [
+        "检查双离合换挡顿挫",
+        "排查烧机油与冷却系统渗漏"
+      ],
+      "advice": "空间优势明显，适合家庭用户关注 330TSI 主销版本。",
+      "heatBreakdown": {
+        "search": 21,
+        "view": 26,
+        "inquiry": 17,
+        "sold": 14
+      },
+      "priceDistribution": [
+        {
+          "label": "10-12",
+          "share": 0
+        },
+        {
+          "label": "12-14",
+          "share": 10
+        },
+        {
+          "label": "14-16",
+          "share": 28
+        },
+        {
+          "label": "16-18",
+          "share": 37
+        },
+        {
+          "label": "18-20",
+          "share": 25
+        }
+      ]
+    },
+    {
+      "id": "buick-envision",
+      "brand": "别克",
+      "model": "昂科威",
+      "segment": "中型 SUV / 合资",
+      "modelYears": "2020-2022",
+      "priceMin": 104000,
+      "priceMax": 158000,
+      "heatIndex": 78,
+      "retentionRate": 59,
+      "ageYears": 4.2,
+      "mileageWanKm": 6.1,
+      "sourceConfidence": 82,
+      "sampleSize": 128,
+      "sources": [
+        "汽车之家",
+        "瓜子",
+        "车300",
+        "公开自动抓取"
+      ],
+      "updatedAt": "2026-07-07T11:34:27.314Z",
+      "riskLevel": "中",
+      "riskNotes": [
+        "价格波动较大，建议压价",
+        "检查变速箱与机油渗漏记录"
+      ],
+      "advice": "配置高、价格下探明显，适合预算敏感型买家。",
+      "heatBreakdown": {
+        "search": 19,
+        "view": 24,
+        "inquiry": 18,
+        "sold": 13
+      },
+      "priceDistribution": [
+        {
+          "label": "10-12",
+          "share": 24
+        },
+        {
+          "label": "12-14",
+          "share": 32
+        },
+        {
+          "label": "14-16",
+          "share": 31
+        },
+        {
+          "label": "16-18",
+          "share": 11
+        },
+        {
+          "label": "18-20",
+          "share": 2
+        }
+      ]
+    },
+    {
+      "id": "honda-breeze",
+      "brand": "本田",
+      "model": "皓影",
+      "segment": "紧凑型 SUV / 合资",
+      "modelYears": "2021-2023",
+      "priceMin": 126000,
+      "priceMax": 179000,
+      "heatIndex": 76,
+      "retentionRate": 72,
+      "ageYears": 3.1,
+      "mileageWanKm": 4.7,
+      "sourceConfidence": 84,
+      "sampleSize": 122,
+      "sources": [
+        "汽车之家",
+        "懂车帝",
+        "瓜子",
+        "公开自动抓取"
+      ],
+      "updatedAt": "2026-07-07T11:34:27.314Z",
+      "riskLevel": "低",
+      "riskNotes": [
+        "核对事故排除报告",
+        "混动版本需查电池健康度"
+      ],
+      "advice": "与 CR-V 接近但价格略松，适合横向议价。",
+      "heatBreakdown": {
+        "search": 20,
+        "view": 23,
+        "inquiry": 16,
+        "sold": 12
+      },
+      "priceDistribution": [
+        {
+          "label": "10-12",
+          "share": 8
+        },
+        {
+          "label": "12-14",
+          "share": 25
+        },
+        {
+          "label": "14-16",
+          "share": 39
+        },
+        {
+          "label": "16-18",
+          "share": 21
+        },
+        {
+          "label": "18-20",
+          "share": 7
+        }
+      ]
+    },
+    {
+      "id": "mazda-cx5",
+      "brand": "马自达",
+      "model": "CX-5",
+      "segment": "紧凑型 SUV / 合资",
+      "modelYears": "2020-2022",
+      "priceMin": 101000,
+      "priceMax": 149000,
+      "heatIndex": 70,
+      "retentionRate": 64,
+      "ageYears": 4.1,
+      "mileageWanKm": 5.6,
+      "sourceConfidence": 75,
+      "sampleSize": 93,
+      "sources": [
+        "懂车帝",
+        "瓜子",
+        "车300"
+      ],
+      "updatedAt": "2026-06-29 16:38",
+      "riskLevel": "低",
+      "riskNotes": [
+        "后排空间预期需试乘",
+        "重点看漆面与底盘剐蹭"
+      ],
+      "advice": "驾驶质感好、样本量略少，适合小家庭或个人用车。",
+      "heatBreakdown": {
+        "search": 17,
+        "view": 22,
+        "inquiry": 14,
+        "sold": 10
+      },
+      "priceDistribution": [
+        {
+          "label": "10-12",
+          "share": 37
+        },
+        {
+          "label": "12-14",
+          "share": 41
+        },
+        {
+          "label": "14-16",
+          "share": 18
+        },
+        {
+          "label": "16-18",
+          "share": 4
+        },
+        {
+          "label": "18-20",
+          "share": 0
+        }
+      ]
+    },
+    {
+      "id": "skoda-kodiaq",
+      "brand": "斯柯达",
+      "model": "柯迪亚克",
+      "segment": "中型 SUV / 合资",
+      "modelYears": "2020-2022",
+      "priceMin": 109000,
+      "priceMax": 159000,
+      "heatIndex": 66,
+      "retentionRate": 56,
+      "ageYears": 4.3,
+      "mileageWanKm": 6,
+      "sourceConfidence": 69,
+      "sampleSize": 74,
+      "sources": [
+        "汽车之家",
+        "懂车帝"
+      ],
+      "updatedAt": "2026-06-29 16:33",
+      "riskLevel": "中",
+      "riskNotes": [
+        "品牌流通性偏弱",
+        "二次转手周期可能较长"
+      ],
+      "advice": "空间和配置性价比突出，但要接受流通性折价。",
+      "heatBreakdown": {
+        "search": 14,
+        "view": 20,
+        "inquiry": 12,
+        "sold": 8
+      },
+      "priceDistribution": [
+        {
+          "label": "10-12",
+          "share": 22
+        },
+        {
+          "label": "12-14",
+          "share": 35
+        },
+        {
+          "label": "14-16",
+          "share": 33
+        },
+        {
+          "label": "16-18",
+          "share": 8
+        },
+        {
+          "label": "18-20",
+          "share": 2
+        }
+      ]
+    },
+    {
+      "id": "hyundai-santafe",
+      "brand": "现代",
+      "model": "胜达",
+      "segment": "中型 SUV / 合资",
+      "modelYears": "2020-2022",
+      "priceMin": 103000,
+      "priceMax": 153000,
+      "heatIndex": 61,
+      "retentionRate": 54,
+      "ageYears": 4.2,
+      "mileageWanKm": 5.8,
+      "sourceConfidence": 70,
+      "sampleSize": 70,
+      "sources": [
+        "汽车之家",
+        "瓜子",
+        "公开自动抓取"
+      ],
+      "updatedAt": "2026-07-07T11:34:27.314Z",
+      "riskLevel": "中",
+      "riskNotes": [
+        "关注冷门配置后续维修便利性",
+        "建议选择车况透明样本"
+      ],
+      "advice": "价格友好、空间够用，适合预算有限但想上中型 SUV 的用户。",
+      "heatBreakdown": {
+        "search": 13,
+        "view": 19,
+        "inquiry": 11,
+        "sold": 7
+      },
+      "priceDistribution": [
+        {
+          "label": "10-12",
+          "share": 31
+        },
+        {
+          "label": "12-14",
+          "share": 36
+        },
+        {
+          "label": "14-16",
+          "share": 25
+        },
+        {
+          "label": "16-18",
+          "share": 6
+        },
+        {
+          "label": "18-20",
+          "share": 2
+        }
+      ]
+    },
+    {
+      "id": "chevrolet-equinox",
+      "brand": "雪佛兰",
+      "model": "探界者",
+      "segment": "中型 SUV / 合资",
+      "modelYears": "2020-2022",
+      "priceMin": 100000,
+      "priceMax": 145000,
+      "heatIndex": 58,
+      "retentionRate": 51,
+      "ageYears": 4.5,
+      "mileageWanKm": 6.4,
+      "sourceConfidence": 64,
+      "sampleSize": 62,
+      "sources": [
+        "懂车帝",
+        "瓜子"
+      ],
+      "updatedAt": "2026-06-29 16:21",
+      "riskLevel": "中",
+      "riskNotes": [
+        "检查油耗与保养成本预期",
+        "冷门车源需关注复检"
+      ],
+      "advice": "低价大空间，适合强预算导向但不太在意保值率的买家。",
+      "heatBreakdown": {
+        "search": 12,
+        "view": 18,
+        "inquiry": 10,
+        "sold": 7
+      },
+      "priceDistribution": [
+        {
+          "label": "10-12",
+          "share": 42
+        },
+        {
+          "label": "12-14",
+          "share": 37
+        },
+        {
+          "label": "14-16",
+          "share": 18
+        },
+        {
+          "label": "16-18",
+          "share": 3
+        },
+        {
+          "label": "18-20",
+          "share": 0
+        }
+      ]
+    }
+  ],
+  "updatedAt": "2026-07-07T11:34:27.314Z",
+  "sourceCoverage": {
+    "sourceCount": 7,
+    "availableSourceCount": 2,
+    "blockedSourceCount": 0,
+    "sampleCount": 22,
+    "importedRecordCount": 0,
+    "updatedAt": "2026-07-07T11:34:27.314Z",
+    "modeNote": "公开源自动抓取到 7 个车型观察信号；公开观察热度不等同 CADA 官方销量。"
+  },
+  "pipelineRunId": "2026-06-live-1783424067314"
+}

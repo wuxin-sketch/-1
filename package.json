@@ -1,0 +1,52 @@
+{
+  "name": "yuezhi-haoche-terminal",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -k -n api,web -c cyan,green \"npm:dev:api\" \"npm:dev:web\"",
+    "dev:web": "vite --host 127.0.0.1 --port 5175 --strictPort",
+    "dev:api": "tsx server/index.ts",
+    "build": "tsc -b && vite build",
+    "lint": "oxlint",
+    "preview": "vite preview --host 127.0.0.1 --port 4175 --strictPort",
+    "start": "tsx server/index.ts",
+    "serve:prod": "npm run build && npm run start",
+    "health": "tsx server/healthCheck.ts",
+    "server": "tsx server/index.ts",
+    "test": "vitest run",
+    "import:data": "tsx server/pipeline/importData.ts",
+    "pipeline:refresh": "tsx server/pipeline/refresh.ts",
+    "pipeline:status": "tsx server/pipeline/status.ts",
+    "official:refresh": "tsx server/official/refresh.ts",
+    "crawl:fixtures": "tsx server/sources/collector.ts --fixtures",
+    "crawl:live": "tsx server/sources/collector.ts --live",
+    "gallery:discover": "tsx server/gallery/discover.ts",
+    "gallery:audit": "tsx server/gallery/audit.ts",
+    "gallery:commit": "tsx server/gallery/commit.ts"
+  },
+  "dependencies": {
+    "cheerio": "^1.2.0",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "lucide-react": "^1.22.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "recharts": "^3.9.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^24.13.2",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.2",
+    "concurrently": "^10.0.3",
+    "oxlint": "^1.69.0",
+    "playwright": "^1.61.1",
+    "tsx": "^4.22.4",
+    "typescript": "~6.0.2",
+    "vite": "^8.1.0",
+    "vitest": "^4.1.9"
+  }
+}
