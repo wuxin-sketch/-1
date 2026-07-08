@@ -2652,15 +2652,49 @@
 
   .vehicle-image-dialog-content {
     width: calc(100vw - 20px);
-    max-height: calc(100vh - 20px);
+    max-height: calc(100dvh - 20px);
   }
 
   .vehicle-image-dialog-header {
-    gap: 8px;
+    display: grid;
+    grid-template-areas:
+      "title close"
+      "kind kind";
+    grid-template-columns: minmax(0, 1fr) 38px;
+    gap: 8px 10px;
+    align-items: start;
+  }
+
+  .vehicle-image-dialog-header > div {
+    grid-area: title;
+    min-width: 0;
+  }
+
+  .vehicle-image-dialog-header strong {
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+  }
+
+  .vehicle-image-dialog-header .vehicle-gallery-kind {
+    grid-area: kind;
+    justify-self: start;
+    width: fit-content;
+    max-width: 100%;
+    height: auto;
+    min-height: 26px;
+    margin-top: 0;
+    padding: 5px 10px;
+    line-height: 1.25;
+    white-space: normal;
+  }
+
+  .vehicle-image-dialog-header .ghost-icon-button {
+    grid-area: close;
+    justify-self: end;
   }
 
   .vehicle-gallery-stage > img {
-    max-height: calc(100vh - 218px);
+    max-height: calc(100dvh - 240px);
   }
 
   .gallery-nav-button {
@@ -2679,6 +2713,7 @@
   .vehicle-gallery-strip {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 6px;
+    overflow-x: auto;
     padding: 8px;
   }
 

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { BottomPanels } from './components/BottomPanels'
 import { FilterRail } from './components/FilterRail'
 import { MethodologyDialog } from './components/MethodologyDialog'
@@ -7,7 +7,7 @@ import { TerminalHeader } from './components/TerminalHeader'
 import { VehicleInspector } from './components/VehicleInspector'
 import { buildRankingCsv } from './lib/csv'
 import { downloadCsv } from './lib/download'
-import { defaultRankingQuery, sampleSourceCoverage } from './lib/rankingEngine'
+import { createRankingResponse, defaultRankingQuery, sampleSourceCoverage } from './lib/rankingEngine'
 import {
   buildInitialCompareIds,
   parseStoredIdList,
@@ -123,16 +123,7 @@ function App() {
   const [query, setQuery] = useState<RankingQuery>(defaultRankingQuery)
   const [tableState, setTableState] = useState(() => createDefaultRankingTableState())
   const [activeView, setActiveView] = useState<WorkspaceView>('value')
-  const [ranking, setRanking] = useState<RankingResponse>(() => ({
-    items: [],
-    scope: defaultRankingQuery.scope,
-    metric: defaultRankingQuery.metric,
-    month: defaultRankingQuery.month,
-    updatedAt: '2026-06-29 16:58',
-    notice: '正在加载公开源抓取样本。',
-    dataMode: 'sample',
-    sourceCoverage: sampleSourceCoverage,
-  }))
+  const [ranking, setRanking] = useState<RankingResponse>(() => createRankingResponse(defaultRankingQuery))
   const [officialMarket, setOfficialMarket] = useState<OfficialUsedCarMarket>(() => buildInitialOfficialMarket())
   const [sourceStatus, setSourceStatus] = useState<SourceStatusResponse>({
     sources: [],
@@ -151,6 +142,7 @@ function App() {
   const [favoriteIds, setFavoriteIds] = useState<string[]>(() => readIdListFromStorage(FAVORITE_STORAGE_KEY))
   const [compareIds, setCompareIds] = useState<string[]>(() => readIdListFromStorage(COMPARE_STORAGE_KEY))
   const [compareNotice, setCompareNotice] = useState('')
+  const dashboardRequestIdRef = useRef(0)
 
   // 根据排序状态生成当前展示顺序。
   const sortedRankingItems = useMemo(
@@ -188,19 +180,42 @@ function App() {
 
   // 拉取榜单、来源状态和默认车型详情。
   const loadDashboardData = useCallback(async function loadDashboardData(targetQuery: RankingQuery = query) {
+    // 标记本次请求，避免慢接口覆盖后续月份状态。
+    const requestId = dashboardRequestIdRef.current + 1
+    dashboardRequestIdRef.current = requestId
+
+    // 判断当前异步请求是否仍是最新请求。
+    function isCurrentDashboardRequest() {
+      return dashboardRequestIdRef.current === requestId
+    }
+
     setIsLoading(true)
     try {
-      const [rankingResponse, sourceResponse, officialResponse, monthResponse, refreshStatusResponse] = await Promise.all([
-        fetchRankings({ ...targetQuery, metric: 'value' }),
+      // 优先读取榜单，让手机端首屏不被辅助接口阻塞。
+      const rankingResponse = await fetchRankings({ ...targetQuery, metric: 'value' })
+      const firstVehicle = rankingResponse.items[0] ?? null
+
+      if (!isCurrentDashboardRequest()) {
+        return
+      }
+
+      setRanking(rankingResponse)
+      setSelectedVehicle(firstVehicle)
+      setIsLoading(false)
+
+      // 并行补齐车型详情、来源状态、官方大盘和刷新状态。
+      const [detail, sourceResponse, officialResponse, monthResponse, refreshStatusResponse] = await Promise.all([
+        firstVehicle ? fetchVehicle(firstVehicle.id, targetQuery.month) : Promise.resolve(null),
         fetchSourceStatuses(targetQuery.month),
         fetchOfficialUsedCarMarket(targetQuery.month),
         fetchMonthOptions(getYearFromMonth(targetQuery.month)),
         fetchDataRefreshStatus(),
       ])
-      const firstVehicle = rankingResponse.items[0] ?? null
-      const detail = firstVehicle ? await fetchVehicle(firstVehicle.id, targetQuery.month) : null
 
-      setRanking(rankingResponse)
+      if (!isCurrentDashboardRequest()) {
+        return
+      }
+
       setSourceStatus(sourceResponse)
       setOfficialMarket(officialResponse)
       setMonthOptions(monthResponse)
@@ -208,7 +223,9 @@ function App() {
       setLastUnifiedRefresh(refreshStatusResponse.history.latest ?? sourceResponse.dataRefresh?.latest ?? null)
       setSelectedVehicle(firstVehicle ? mergeVehicleDetailWithRankingItem(firstVehicle, detail) : null)
     } finally {
-      setIsLoading(false)
+      if (isCurrentDashboardRequest()) {
+        setIsLoading(false)
+      }
     }
   }, [query])
 

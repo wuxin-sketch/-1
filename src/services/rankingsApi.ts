@@ -17,6 +17,19 @@ import type {
   VehicleRankItem,
 } from '../types'
 
+// 定义读接口最长等待时间，避免冷启动时首屏长时间空白。
+const DEFAULT_READ_TIMEOUT_MS = 3500
+
+// 为前端读接口增加超时控制，失败后交给现有兜底数据处理。
+function fetchWithTimeout(input: RequestInfo | URL, init: RequestInit = {}, timeoutMs = DEFAULT_READ_TIMEOUT_MS) {
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs)
+
+  return fetch(input, { ...init, signal: controller.signal }).finally(() => {
+    clearTimeout(timeoutId)
+  })
+}
+
 // 将查询参数转换成接口查询字符串。
 export function buildRankingSearchParams(query: RankingQuery) {
   const params = new URLSearchParams()
@@ -133,7 +146,7 @@ function buildFallbackImportPreview(month: string, fileName: string, message = '
 // 从本地 API 获取榜单数据，失败时回退到项目内样本。
 export async function fetchRankings(query: RankingQuery): Promise<RankingResponse> {
   try {
-    const response = await fetch(`/api/rankings?${buildRankingSearchParams(query).toString()}`)
+    const response = await fetchWithTimeout(`/api/rankings?${buildRankingSearchParams(query).toString()}`)
     if (!response.ok) {
       throw new Error(`rankings request failed: ${response.status}`)
     }
@@ -147,7 +160,7 @@ export async function fetchRankings(query: RankingQuery): Promise<RankingRespons
 // 从本地 API 获取来源和管线状态，失败时回退到项目内样本。
 export async function fetchSourceStatuses(month = defaultRankingQuery.month): Promise<SourceStatusResponse> {
   try {
-    const response = await fetch(`/api/sources/status?month=${encodeURIComponent(month)}`)
+    const response = await fetchWithTimeout(`/api/sources/status?month=${encodeURIComponent(month)}`)
     if (!response.ok) {
       throw new Error(`sources request failed: ${response.status}`)
     }
@@ -166,7 +179,7 @@ export async function fetchSourceStatuses(month = defaultRankingQuery.month): Pr
 // 从本地 API 获取今年所有月份的数据可用状态。
 export async function fetchMonthOptions(year = new Date().getFullYear()): Promise<MonthOption[]> {
   try {
-    const response = await fetch(`/api/months?year=${encodeURIComponent(String(year))}`)
+    const response = await fetchWithTimeout(`/api/months?year=${encodeURIComponent(String(year))}`)
     if (!response.ok) {
       throw new Error(`months request failed: ${response.status}`)
     }
@@ -185,7 +198,7 @@ export async function fetchMonthOptions(year = new Date().getFullYear()): Promis
 // 从本地 API 获取统一刷新历史和自动调度器状态。
 export async function fetchDataRefreshStatus(): Promise<DataRefreshStatusResponse> {
   try {
-    const response = await fetch('/api/data/refresh/status')
+    const response = await fetchWithTimeout('/api/data/refresh/status')
     if (!response.ok) {
       throw new Error(`data refresh status failed: ${response.status}`)
     }
@@ -238,7 +251,7 @@ export async function commitImportPreview(previewId: string): Promise<ImportComm
 // 从本地 API 获取 CADA 官方二手车大盘。
 export async function fetchOfficialUsedCarMarket(month = 'latest'): Promise<OfficialUsedCarMarket> {
   try {
-    const response = await fetch(`/api/official/used-car?month=${encodeURIComponent(month)}`)
+    const response = await fetchWithTimeout(`/api/official/used-car?month=${encodeURIComponent(month)}`)
     if (!response.ok) {
       throw new Error(`official used car request failed: ${response.status}`)
     }
@@ -311,7 +324,7 @@ export async function refreshPublicPipeline(month = defaultRankingQuery.month): 
 // 从本地 API 获取车型详情，失败时回退到项目内样本。
 export async function fetchVehicle(modelId: string, month = defaultRankingQuery.month): Promise<VehicleRankItem | null> {
   try {
-    const response = await fetch(`/api/vehicles/${modelId}?month=${encodeURIComponent(month)}`)
+    const response = await fetchWithTimeout(`/api/vehicles/${modelId}?month=${encodeURIComponent(month)}`)
     if (!response.ok) {
       throw new Error(`vehicle request failed: ${response.status}`)
     }

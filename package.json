@@ -5,11 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently -k -n api,web -c cyan,green \"npm:dev:api\" \"npm:dev:web\"",
-    "dev:web": "vite --host 127.0.0.1 --port 5175 --strictPort",
+    "dev:web": "vite --host 0.0.0.0 --port 5175 --strictPort",
     "dev:api": "tsx server/index.ts",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "preview": "vite preview --host 127.0.0.1 --port 4175 --strictPort",
+    "preview": "vite preview --host 0.0.0.0 --port 4175 --strictPort",
     "start": "tsx server/index.ts",
     "serve:prod": "npm run build && npm run start",
     "health": "tsx server/healthCheck.ts",
