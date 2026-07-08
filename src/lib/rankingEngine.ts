@@ -1,6 +1,6 @@
-import { vehicleSeed } from '../data/vehicles'
+import { vehicleSeed } from '../data/vehicles.ts'
 import type { DataMode, RankingMetric, RankingQuery, RankingResponse, SourceCoverage, VehicleRankItem } from '../types'
-import { dedupeVehicles, enrichRankings, filterByPrice } from './scoring'
+import { dedupeVehicles, enrichRankings, filterByPrice } from './scoring.ts'
 
 // 根据日期生成默认查询月份。
 export function getDefaultQueryMonth(now = new Date()) {
