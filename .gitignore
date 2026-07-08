@@ -24,7 +24,8 @@ dist-ssr
 output
 playwright-report
 test-results
-data/runs
+data/runs/*
+!data/runs/.gitkeep
 data/gallery-test
 *.tsbuildinfo
 
