@@ -64,6 +64,8 @@ vercel env add CRON_SECRET production
 
 `CRON_SECRET` 应使用独立高强度随机值，不要复用浏览器端保存的 `YUEZHI_ADMIN_TOKEN`。Cron 执行成功后会写入 `data/runs/latest-data-refresh-scheduled.json`，页面消息中心和 `/api/data/refresh/status` 会读取该记录。
 
+Vercel 函数运行时会把初始 `data` 目录复制到 `/tmp/yuezhi-haoche-data` 后再写入刷新缓存；该目录适合 Cron 执行期和热实例读取，不是跨冷启动的长期持久存储。若要保证每次冷启动后仍保留最新自动刷新结果，下一步应接入 Vercel Blob、数据库或其他外部持久化。
+
 ## 关闭启动自动刷新
 
 ```powershell
