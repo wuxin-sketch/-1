@@ -9,7 +9,7 @@ import { buildMonthOptions } from '../src/lib/monthOptions.ts'
 import type { GalleryCropMode, GalleryCropSelection, RankingMetric, RankingQuery, RankingScope } from '../src/types.ts'
 import { collectFixtureSourceStatuses, collectLiveSourceStatuses, getFallbackSourceStatuses } from './sources/collector.ts'
 import { buildSourceCoverage, listRankingCacheSummaries, readLatestPipelineRun, readRankingCache } from './pipeline/cache.ts'
-import { assertValidPipelineMonth } from './pipeline/paths.ts'
+import { assertValidPipelineMonth, ensureDataDirectories } from './pipeline/paths.ts'
 import { refreshPipeline } from './pipeline/refresh.ts'
 import { commitImportPreview, previewImportData } from './pipeline/importWorkflow.ts'
 import { getOfficialUsedCarMarket, refreshOfficialUsedCarMarket } from './official/service.ts'
@@ -259,7 +259,8 @@ function handleHealthRoute(request: Request, response: Response) {
 }
 
 // 返回轻量就绪检查 API 响应。
-function handleReady(_request: Request, response: Response) {
+async function handleReady(_request: Request, response: Response) {
+  await ensureDataDirectories()
   response.json(
     buildServiceReady({
       startedAtMs: serviceStartedAtMs,

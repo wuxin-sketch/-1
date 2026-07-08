@@ -1,8 +1,17 @@
-import { mkdir } from 'node:fs/promises'
+import { cp, mkdir } from 'node:fs/promises'
 import { isAbsolute, relative, resolve } from 'node:path'
+import { tmpdir } from 'node:os'
+
+// 定义随部署包一起发布的只读数据根目录。
+export const bundledDataRoot = resolve(process.cwd(), 'data')
+
+// 判断当前是否需要使用运行期可写数据目录。
+function shouldUseRuntimeDataRoot(environment: NodeJS.ProcessEnv = process.env) {
+  return Boolean(environment.YUEZHI_DATA_DIR || environment.VERCEL)
+}
 
 // 定义项目数据根目录。
-export const dataRoot = resolve(process.cwd(), 'data')
+export const dataRoot = resolve(process.env.YUEZHI_DATA_DIR ?? (shouldUseRuntimeDataRoot() ? resolve(tmpdir(), 'yuezhi-haoche-data') : bundledDataRoot))
 
 // 定义月度导入文件目录。
 export const importsDir = resolve(dataRoot, 'imports')
@@ -12,6 +21,24 @@ export const cacheDir = resolve(dataRoot, 'cache')
 
 // 定义管线运行记录目录。
 export const runsDir = resolve(dataRoot, 'runs')
+
+let runtimeDataSeeded = false
+
+// 判断运行期数据目录是否需要从部署包复制初始内容。
+function shouldSeedRuntimeDataRoot() {
+  return dataRoot !== bundledDataRoot
+}
+
+// 将部署包内的初始数据复制到运行期可写目录。
+async function seedRuntimeDataRoot() {
+  if (!shouldSeedRuntimeDataRoot() || runtimeDataSeeded) {
+    return
+  }
+
+  await mkdir(dataRoot, { recursive: true })
+  await cp(bundledDataRoot, dataRoot, { recursive: true, force: false, errorOnExist: false })
+  runtimeDataSeeded = true
+}
 
 // 校验月份是否为可落盘的 YYYY-MM 格式。
 export function isValidPipelineMonth(month: string) {
@@ -45,6 +72,7 @@ function resolveInsideDirectory(directory: string, fileName: string) {
 
 // 确保数据管线目录存在。
 export async function ensureDataDirectories() {
+  await seedRuntimeDataRoot()
   await Promise.all([mkdir(importsDir, { recursive: true }), mkdir(cacheDir, { recursive: true }), mkdir(runsDir, { recursive: true })])
 }
 
