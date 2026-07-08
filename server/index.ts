@@ -4,7 +4,7 @@ import { existsSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { buildRankingCsv } from '../src/lib/csv.ts'
-import { defaultRankingQuery, findVehicleById, createRankingResponse, sampleSourceCoverage } from '../src/lib/rankingEngine.ts'
+import { buildDefaultRankingQuery, defaultRankingQuery, findVehicleById, createRankingResponse, sampleSourceCoverage } from '../src/lib/rankingEngine.ts'
 import { buildMonthOptions } from '../src/lib/monthOptions.ts'
 import type { GalleryCropMode, GalleryCropSelection, RankingMetric, RankingQuery, RankingScope } from '../src/types.ts'
 import { collectFixtureSourceStatuses, collectLiveSourceStatuses, getFallbackSourceStatuses } from './sources/collector.ts'
@@ -24,7 +24,7 @@ import {
   readGalleryCandidatePreviewImage,
   rejectGalleryCandidate,
 } from './gallery/store.ts'
-import { createCorsOptionsDelegate, isAdminRequestAllowed, requireAdminRequest } from './security.ts'
+import { createCorsOptionsDelegate, isAdminRequestAllowed, readCronSecret, requireAdminRequest, requireCronRequest } from './security.ts'
 
 // 定位服务端入口所在目录。
 const serverDir = dirname(fileURLToPath(import.meta.url))
@@ -37,6 +37,7 @@ const app = express()
 const port = Number(process.env.PORT ?? 8787)
 const host = process.env.YUEZHI_HOST ?? process.env.HOST ?? '127.0.0.1'
 const serviceStartedAtMs = Date.now()
+const vercelCronSchedule = '0 20 * * *'
 
 // 创建服务级数据自动刷新调度器。
 const dataRefreshScheduler = createDataRefreshScheduler({
@@ -344,6 +345,22 @@ async function handleDataRefresh(request: Request, response: Response) {
   response.json(await refreshUnifiedData(month, 'manual'))
 }
 
+// 解析 Vercel Cron 定时刷新需要处理的目标月份。
+function parseCronRefreshMonth(request: Request) {
+  const month = String(request.query.month ?? buildDefaultRankingQuery().month)
+  assertValidPipelineMonth(month)
+  return month
+}
+
+// 执行 Vercel Cron 触发的统一数据刷新。
+async function handleCronDataRefresh(request: Request, response: Response) {
+  const result = await refreshUnifiedData(parseCronRefreshMonth(request), 'scheduled')
+  response.json({
+    ok: result.status !== 'failed',
+    result,
+  })
+}
+
 // 桥接异步统一刷新处理器到 Express 路由。
 function handleDataRefreshRoute(request: Request, response: Response) {
   void handleDataRefresh(request, response).catch((error: unknown) => {
@@ -351,9 +368,43 @@ function handleDataRefreshRoute(request: Request, response: Response) {
   })
 }
 
+// 桥接 Vercel Cron 统一刷新处理器到 Express 路由。
+function handleCronDataRefreshRoute(request: Request, response: Response) {
+  void handleCronDataRefresh(request, response).catch((error: unknown) => {
+    response.status(getRequestErrorStatus(error)).json({ message: error instanceof Error ? error.message : 'cron data refresh unavailable' })
+  })
+}
+
+// 根据 Vercel Cron 的每日计划计算下一次触发时间。
+function getNextDailyCronRunAt(now = new Date()) {
+  const [minuteText, hourText] = vercelCronSchedule.split(' ')
+  const nextRun = new Date(now)
+  nextRun.setUTCHours(Number(hourText), Number(minuteText), 0, 0)
+
+  if (nextRun <= now) {
+    nextRun.setUTCDate(nextRun.getUTCDate() + 1)
+  }
+
+  return nextRun.toISOString()
+}
+
 // 返回统一数据刷新历史和自动调度器状态。
 async function handleDataRefreshStatus(_request: Request, response: Response) {
-  response.json(await dataRefreshScheduler.getStatus())
+  const status = await dataRefreshScheduler.getStatus()
+  const cronEnabled = Boolean(process.env.VERCEL && readCronSecret())
+  response.json(
+    cronEnabled
+      ? {
+          ...status,
+          scheduler: {
+            ...status.scheduler,
+            enabled: true,
+            started: true,
+            nextRunAt: getNextDailyCronRunAt(),
+          },
+        }
+      : status,
+  )
 }
 
 // 桥接异步数据刷新状态处理器到 Express 路由。
@@ -533,6 +584,7 @@ app.get('/api/official/used-car', handleOfficialUsedCarRoute)
 app.post('/api/official/used-car/refresh', requireAdminRequest, handleOfficialUsedCarRefreshRoute)
 app.post('/api/pipeline/refresh', requireAdminRequest, handlePipelineRefreshRoute)
 app.post('/api/data/refresh', requireAdminRequest, handleDataRefreshRoute)
+app.get('/api/cron/data-refresh', requireCronRequest, handleCronDataRefreshRoute)
 app.get('/api/data/refresh/status', handleDataRefreshStatusRoute)
 app.post('/api/imports/preview', requireAdminRequest, handleImportPreviewRoute)
 app.post('/api/imports/commit', requireAdminRequest, handleImportCommitRoute)

@@ -8,6 +8,12 @@
       "includeFiles": "{server,src,data,public}/**"
     }
   },
+  "crons": [
+    {
+      "path": "/api/cron/data-refresh",
+      "schedule": "0 20 * * *"
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/:path*",

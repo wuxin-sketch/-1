@@ -48,6 +48,22 @@ $env:YUEZHI_CORS_ORIGINS='https://example.com,https://www.example.com'
 .\local-preview.ps1 -Mode preview
 ```
 
+## Vercel Cron 定时刷新
+
+线上生产部署通过 Vercel Cron 每天 UTC 20:00（北京时间 04:00）调用：
+
+```http
+GET /api/cron/data-refresh
+```
+
+该接口只接受 Vercel Cron 自动携带的 `Authorization: Bearer <CRON_SECRET>`，需要在 Vercel Production 环境变量中配置：
+
+```powershell
+vercel env add CRON_SECRET production
+```
+
+`CRON_SECRET` 应使用独立高强度随机值，不要复用浏览器端保存的 `YUEZHI_ADMIN_TOKEN`。Cron 执行成功后会写入 `data/runs/latest-data-refresh-scheduled.json`，页面消息中心和 `/api/data/refresh/status` 会读取该记录。
+
 ## 关闭启动自动刷新
 
 ```powershell

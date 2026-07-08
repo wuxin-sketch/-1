@@ -64,6 +64,16 @@ POST /api/data/refresh?month=2026-06
 
 来源监控会展示 CADA 缓存时间、公开源覆盖度、partial/offline 状态和失败原因。公开源不可用时只记录降级状态，不绕过平台限制。
 
+### Vercel Cron
+
+生产环境使用 `vercel.json` 中的 Cron 配置每天 UTC 20:00（北京时间 04:00）触发：
+
+```http
+GET /api/cron/data-refresh
+```
+
+该接口使用独立的 `CRON_SECRET` Bearer 令牌鉴权，只写入 `scheduled` 类型刷新记录，不改变 CADA 未发布月份的严格口径。
+
 ## 运行健康检查
 
 - `GET /api/ready`：轻量就绪检查，只确认 API 进程、`dist` 静态目录和关键数据目录是否可用。

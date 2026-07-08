@@ -1,6 +1,6 @@
 import type { Request } from 'express'
 import { describe, expect, it } from 'vitest'
-import { isAdminRequestAllowed, isAllowedCorsOrigin, isProductionLikeEnvironment } from '../server/security'
+import { isAdminRequestAllowed, isAllowedCorsOrigin, isCronRequestAllowed, isProductionLikeEnvironment, readCronSecret } from '../server/security'
 
 // 构造最小 Express 请求对象以测试鉴权逻辑。
 function buildRequest(headers: Record<string, string>, ip = '127.0.0.1'): Request {
@@ -40,5 +40,15 @@ describe('server security controls', () => {
 
     expect(isAdminRequestAllowed(buildRequest({ host: 'api.example', authorization: 'Bearer secret-token' }, '203.0.113.10'), environment)).toBe(true)
     expect(isAdminRequestAllowed(buildRequest({ host: 'api.example', authorization: 'Bearer wrong-token' }, '203.0.113.10'), environment)).toBe(false)
+  })
+
+  // 验证 Vercel Cron 使用独立令牌并只接受 Bearer 授权头。
+  it('requires a valid cron secret bearer token', () => {
+    const environment = { NODE_ENV: 'production', CRON_SECRET: 'cron-secret' } as NodeJS.ProcessEnv
+
+    expect(readCronSecret(environment)).toBe('cron-secret')
+    expect(isCronRequestAllowed(buildRequest({ host: 'api.example', authorization: 'Bearer cron-secret' }, '203.0.113.10'), environment)).toBe(true)
+    expect(isCronRequestAllowed(buildRequest({ host: 'api.example', 'x-admin-token': 'cron-secret' }, '203.0.113.10'), environment)).toBe(false)
+    expect(isCronRequestAllowed(buildRequest({ host: 'api.example', authorization: 'Bearer wrong-secret' }, '203.0.113.10'), environment)).toBe(false)
   })
 })

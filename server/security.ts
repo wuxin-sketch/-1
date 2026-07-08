@@ -5,6 +5,9 @@ import { timingSafeEqual } from 'node:crypto'
 // 定义管理员令牌支持读取的环境变量名称。
 const adminTokenEnvironmentKeys = ['YUEZHI_ADMIN_TOKEN', 'ADMIN_API_TOKEN'] as const
 
+// 定义 Vercel Cron 令牌支持读取的环境变量名称。
+const cronSecretEnvironmentKeys = ['CRON_SECRET', 'YUEZHI_CRON_SECRET'] as const
+
 // 定义本地开发默认允许的前端来源。
 const localDevelopmentOrigins = new Set(['http://127.0.0.1:5175', 'http://localhost:5175', 'http://127.0.0.1:4175', 'http://localhost:4175'])
 
@@ -26,6 +29,11 @@ export function isProductionLikeEnvironment(environment: NodeJS.ProcessEnv = pro
 // 读取服务端管理员令牌。
 export function readAdminToken(environment: NodeJS.ProcessEnv = process.env) {
   return adminTokenEnvironmentKeys.map((key) => environment[key]).find((value): value is string => Boolean(value?.trim()))?.trim() ?? ''
+}
+
+// 读取服务端定时任务令牌。
+export function readCronSecret(environment: NodeJS.ProcessEnv = process.env) {
+  return cronSecretEnvironmentKeys.map((key) => environment[key]).find((value): value is string => Boolean(value?.trim()))?.trim() ?? ''
 }
 
 // 判断主机名是否为本机回环地址。
@@ -102,15 +110,31 @@ export function isAdminTokenAccepted(providedToken: string, expectedToken: strin
   return provided.length === expected.length && timingSafeEqual(provided, expected)
 }
 
-// 从请求头中读取管理员令牌。
-function readRequestAdminToken(request: Request) {
+// 从请求头中读取 Bearer 令牌。
+function readRequestBearerToken(request: Request) {
   const authorization = String(request.headers.authorization ?? '')
   if (authorization.toLowerCase().startsWith('bearer ')) {
     return authorization.slice(7).trim()
   }
 
+  return ''
+}
+
+// 从请求头中读取管理员令牌。
+function readRequestAdminToken(request: Request) {
+  const bearerToken = readRequestBearerToken(request)
+  if (bearerToken) {
+    return bearerToken
+  }
+
   const headerToken = request.headers['x-admin-token']
   return Array.isArray(headerToken) ? headerToken[0] ?? '' : String(headerToken ?? '')
+}
+
+// 判断请求是否允许执行 Vercel Cron 定时任务。
+export function isCronRequestAllowed(request: Request, environment: NodeJS.ProcessEnv = process.env) {
+  const expectedSecret = readCronSecret(environment)
+  return Boolean(expectedSecret) && isAdminTokenAccepted(readRequestBearerToken(request), expectedSecret)
 }
 
 // 判断请求是否允许执行管理员操作。
@@ -132,5 +156,17 @@ export function requireAdminRequest(request: Request, response: Response, next: 
 
   response.status(readAdminToken() ? 401 : 403).json({
     message: readAdminToken() ? '管理员令牌无效或缺失。' : '生产环境必须配置 YUEZHI_ADMIN_TOKEN 或 ADMIN_API_TOKEN。',
+  })
+}
+
+// 拦截未授权的 Vercel Cron 定时任务请求。
+export function requireCronRequest(request: Request, response: Response, next: NextFunction) {
+  if (isCronRequestAllowed(request)) {
+    next()
+    return
+  }
+
+  response.status(readCronSecret() ? 401 : 403).json({
+    message: readCronSecret() ? '定时任务令牌无效或缺失。' : '生产环境必须配置 CRON_SECRET。',
   })
 }
